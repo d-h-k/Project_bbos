@@ -1,8 +1,10 @@
 package com.codessquad.qna.Controller;
 
 import com.codessquad.qna.domain.User;
+import com.codessquad.qna.domain.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,7 +17,11 @@ import java.util.List;
 public class UserController {
 
     private Logger logger = LoggerFactory.getLogger(UserController.class);
-    final private List<User> userList = new ArrayList<>();
+    //final private List<User> userList = new ArrayList<>();
+
+    @Autowired
+    private UserRepository userRepository;
+
 
     @GetMapping("users/form.html")
     public String signUpForm() {
@@ -25,14 +31,17 @@ public class UserController {
 
     @PostMapping("/users/create")
     public String userCreate(User user) {
-        userList.add(user);
+        //userList.add(user);
+        userRepository.save(user);
+
         return "redirect:/users/list";
     }
 
     @GetMapping("/users/list")
     public String list(Model model) {
         logger.info("userslist");
-        model.addAttribute("userlist",userList);
+        //model.addAttribute("userlist",userList);
+        model.addAttribute("userlist",userRepository.findAll());
         return "users/list";
     }
 
@@ -45,7 +54,7 @@ public class UserController {
     }
 
     public User getUserByUserId(String userId) {
-        for(User user: userList) {
+        for(User user: userRepository.findAll()) {
             if(user.getUserId().equals(userId)) {
                 return user;
             }
@@ -62,7 +71,7 @@ public class UserController {
     public String updateForm(@PathVariable(name="userId") String userId, Model model) {
         System.out.println("updateForm@@@");
         User currentUser;
-        for(User user : userList) {
+        for(User user : userRepository.findAll()) {
             if(user.getUserId().equals(userId)) {
                 model.addAttribute("user",user);
                 break;

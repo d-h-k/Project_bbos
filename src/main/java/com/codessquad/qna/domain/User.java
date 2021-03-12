@@ -1,11 +1,21 @@
 package com.codessquad.qna.domain;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import java.util.Objects;
 
+@Entity
 public class User {
 
+    @Id//프라이머리 키
+    @GeneratedValue//자동으로 숫자 증가: 오토인크리멘탈
+    private Long id;
+
+    @Column(nullable = false, length = 20)// 공백을 허용하지 않음, 최대 길이는 20
     private String userId;
-    private String password;
+    private String password;//나머지는 그냥 디폴트값이 설정되어 있는데 걍 쓰면 됩니다!
     private String name;
     private String email;
 
